@@ -1,76 +1,65 @@
-import { useEffect, useState, useRef } from "react";
-//import socket from "../../socket";
+import { useEffect, useState } from "react";
+import Chamados from "../Cards/Chamados"
 
+function Chat({ socket, setChatVisibility }) {
+  const [chats, setChats] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
 
+  useEffect(() => {
+    // Escutando novas chamadas
+    socket.on("NEW_CALL", (call) => {
+      console.log("Nova chamada recebida:", call);
+      setChats((prevChats) => [...prevChats, call]);
 
+      // Confirmação 
+      socket.emit("NEW_CALL_ANSWERED", { callId: call.callId });
+    });
 
-function Chat({setChatVisibility, socket}) {
-  //const [messages, setMessages] = useState([]);
-  const messageRef = useRef();
-  const [messageList,setMessageList] = useState([]);
+    // Removendo chamadas
+    socket.on("CALL_ENDED", (data) => {
+      setChats((prevChats) => prevChats.filter((chat) => chat.callId !== data.callId));
+      if (currentChat?.callId === data.callId) {
+        setCurrentChat(null);
+      }
+    });
 
-useEffect(() => {
-  /*socket.on("connect", () => {
-    console.log("Conectado ao servidor com ID:", socket.id);
-  });
+    return () => {
+      socket.off("NEW_CALL");
+      socket.off("CALL_ENDED");
+    };
+  }, [socket, currentChat]);
 
-  socket.on("disconnect", (reason) => {
-    console.log("Desconectado do servidor. Motivo:", reason);
-  });
-
-  socket.on("connect_error", (error) => {
-    console.error("Erro de conexão:", error);
-  });
-
-  socket.on("serverEvent", (data) => {
-    console.log("Recebido do servidor:", data);
-    setMessages((prevMessages) => [...prevMessages, data]);
-  });
-
-  Limpeza
-  return () => {
-    socket.off("serverEvent");
-    socket.off("connect");
-    socket.off("disconnect");
-    socket.off("connect_error");
-  };*/
-}, []);
-
-  const handleSubmit = () => {
-    const message = { text: messageRef.current.value };
-    
-    if (!message.trim()) return;
-    socket.emit("message", message);
-  }
-
-  const handleOut = () => {
-    setChatVisibility(false);
-  }
-  const sendMessage = () => {
-    /*const message = { text: "Hello, Server!" };
-    socket.emit("clientEvent", message); // Evento enviado ao servidor
-    console.log("Enviado para o servidor:", message);*/
+  const handleEndCall = (callId) => {
+    socket.emit("END_CALL", { callId });
   };
 
   return (
-
     <div>
-      <h1>Chat</h1>
-      <input type="text" ref={messageRef} placeholder="Mensagem" />
-      <button onClick={()=>{handleSubmit()}}>enviar</button>
-    </div>
+      <button onClick={() => setChatVisibility(false)}>Desconectar</button>
+      <div>
+        <h2>Chats em andamento</h2>
+        <div className="flex flex-col">
+          {chats.map((chat) => (
+            // Chamados
+            <Chamados key={chat.callId}  chat={chat} setCurrentChat={ setCurrentChat(chat)} />
+            /*<li key={chat.callId} onClick={() => setCurrentChat(chat)}>
+              {chat.caller} - {chat.service}
+            </li>*/
+          ))}
+        </div>
+      </div>
+      {currentChat && (
+        // details 
 
-  /*  <div>
-      <h1>WebSocket Chat</h1>
-      <button onClick={sendMessage}>Enviar Mensagem</button>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{JSON.stringify(msg)}</li>
-        ))}
-      </ul>
-      <button onClick={ ()=>handleOut() }>Sair</button>
-    </div>*/
+        <div>
+          <h3>Chat Atual</h3>
+          <p>Serviço: {currentChat.service}</p>
+          <p>Chamador: {currentChat.caller}</p>
+          <button onClick={() => handleEndCall(currentChat.callId)}>Encerrar</button>
+        </div>
+      )}
+    </div>
   );
 }
 
-export default Chat
+export default Chat;

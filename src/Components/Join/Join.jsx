@@ -1,35 +1,52 @@
-import { useRef } from "react";
 import { io } from "socket.io-client";
 
-function Join({setChatVisibility, setSocket}) {
+function Join({ setSocket, setChatVisibility }) {
+  const handleConnect = (username, maxCalls) => {
+    const socket = io("http://dev.digitro.com", {
+      reconnectionDelayMax: 10000,
+      path: "/callcontrol",
+    });
 
-  const usernameRef = useRef();
-  const userQtdMessage = useRef();
+    
+    socket.emit("USER_CONNECT", { username, maxCalls });
 
-  const handleSubmit = async() => {
-    const  username = usernameRef.current.value;
-    const qtdMessage = userQtdMessage.current.value;
-    if(username.trim() === '' || qtdMessage.trim() === '') return;
+    // Confirmando conexão
+    socket.on("USER_CONNECTED", () => {
+      console.log(`Usuário ${username} conectado com sucesso, com limite de ${maxCalls} chamadas.`);
+      setSocket(socket); 
+      setChatVisibility(true); 
+    });
 
-    console.log("Submit", username, qtdMessage);
-
-    const socket = await io.connect("http://dev.digitro.com")
-    socket.emit("set_username", username);
-    socket.emit("set_calls", userQtdMessage);
-    setSocket(socket);
-
-    //setChatVisibility(true);
-  }
+    // tratamento de erro 
+    socket.on("USER_CONNECTION_ERROR", (error) => {
+      console.error("Erro ao conectar:", error);
+      alert("Erro na conexão: " + error.error);
+    });
+  };
 
   return (
-    <div className="flex flex-col">
-      <h1 className="m-1">Entrar</h1>
-      <input type="text" placeholder='Nome' ref={usernameRef} className="m-1" />
-      <input type="number" placeholder='numero de mensagens' ref={userQtdMessage} className="m-1" />
-      <button className="m-1" onClick={ ()=>handleSubmit() } >Entrar</button>
-
+    <div>
+      
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const username = e.target.username.value;
+          const maxCalls = Number(e.target.maxCalls.value);
+          handleConnect(username, maxCalls);
+        }}
+      >
+        <input name="username" placeholder="Nome do usuário" required />
+        <input
+          name="maxCalls"
+          type="number"
+          placeholder="Máximo de chamadas"
+          min="1"
+          required
+        />
+        <button type="submit">Conectar</button>
+      </form>
     </div>
   );
 }
 
-export default Join
+export default Join;
