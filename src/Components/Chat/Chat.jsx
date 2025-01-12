@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import Chamados from "../Cards/Chamados"
+import Chamados from "../Cards/Chamados";
+import Button from "../Form/Button";
+import Details from "../Cards/Details";
 
 function Chat({ socket, setChatVisibility }) {
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
+  const userName = localStorage.getItem("username");
 
   useEffect(() => {
     // Escutando novas chamadas
@@ -11,13 +14,15 @@ function Chat({ socket, setChatVisibility }) {
       console.log("Nova chamada recebida:", call);
       setChats((prevChats) => [...prevChats, call]);
 
-      // Confirmação 
+      // Confirmação
       socket.emit("NEW_CALL_ANSWERED", { callId: call.callId });
     });
 
     // Removendo chamadas
     socket.on("CALL_ENDED", (data) => {
-      setChats((prevChats) => prevChats.filter((chat) => chat.callId !== data.callId));
+      setChats((prevChats) =>
+        prevChats.filter((chat) => chat.callId !== data.callId)
+      );
       if (currentChat?.callId === data.callId) {
         setCurrentChat(null);
       }
@@ -35,29 +40,34 @@ function Chat({ socket, setChatVisibility }) {
 
   return (
     <div>
-      <button onClick={() => setChatVisibility(false)}>Desconectar</button>
-      <div>
-        <h2>Chats em andamento</h2>
-        <div className="flex flex-col">
-          {chats.map((chat) => (
-            // Chamados
-            <Chamados key={chat.callId}  chat={chat} setCurrentChat={ setCurrentChat(chat)} />
-            /*<li key={chat.callId} onClick={() => setCurrentChat(chat)}>
-              {chat.caller} - {chat.service}
-            </li>*/
-          ))}
-        </div>
+      <div className="flex align-center justify-center p-4">
+        <p className="m-0 p-0 cursor-default">{userName}</p>
+        <Button onClick={() => setChatVisibility(false)}>Desconectar</Button>
       </div>
-      {currentChat && (
-        // details 
-
-        <div>
+      <div className="flex ">
+        <div className="p-4">
+          <h2 className="cursor-default">Chats em andamento</h2>
+          <div className="flex flex-col ">
+            {chats.map((chat) => (
+              <Chamados
+                key={chat.callId}
+                chat={chat}
+                onSelect={setCurrentChat}
+              />
+            ))}
+          </div>
+        </div>
+        {currentChat && (
+          // details
+          <Details currentChat={currentChat} handleEndCall={handleEndCall} />
+          /*<div>
           <h3>Chat Atual</h3>
           <p>Serviço: {currentChat.service}</p>
           <p>Chamador: {currentChat.caller}</p>
-          <button onClick={() => handleEndCall(currentChat.callId)}>Encerrar</button>
-        </div>
-      )}
+          <Button onClick={() => handleEndCall(currentChat.callId)}>Encerrar</Button>
+        </div>*/
+        )}
+      </div>
     </div>
   );
 }

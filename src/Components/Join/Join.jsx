@@ -13,6 +13,7 @@ function Join({ setSocket, setChatVisibility }) {
     socket.emit("USER_CONNECT", { username, maxCalls });
 
     socket.on("USER_CONNECTED", () => {
+      localStorage.setItem("username", username);
       console.log(`Usuário ${username} conectado com sucesso, com limite de ${maxCalls} chamadas.`);
       setSocket(socket);
       setChatVisibility(true);
