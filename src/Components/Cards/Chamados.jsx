@@ -1,7 +1,7 @@
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
 function Chamados({ chat, onSelect }) {
-  console.log(chat);
+  
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
@@ -13,24 +13,20 @@ function Chamados({ chat, onSelect }) {
     return ` ${hours}:${minutes}:${seconds}`;
   };
   return (
-    <div className="flex cursor-pointer " onClick={() => onSelect(chat)}>
-      {/*<p>
-        {chat.caller} - {chat.service}
-      </p>*/}
-      <div className="flex border">
-        <div className="flex">
-          <p>
-            <IoChatbubbleEllipsesSharp />
-          </p>
-        </div>
-        <div className="flex flex-col">
-          <p className="mx-1 text-left text-bold cursor-default">
-            {chat.caller}
-          </p>
-          <p className="mx-1 text-left cursor-default">{chat.service}</p>
-        </div>
-        <div className="flex"> {formatDate(chat.startDate)} </div>
+    <div
+      className="flex border-2 m-2 p-2 cursor-pointer hover:border-orange-300"
+      onClick={() => onSelect(chat)}
+    >
+      <div className="flex align-center justify-center">
+        <p>
+          <IoChatbubbleEllipsesSharp />
+        </p>
       </div>
+      <div className="flex flex-col">
+        <p className="mx-1 text-left text-bold cursor-default">{chat.caller}</p>
+        <small className="mx-1 text-left cursor-default">{chat.service}</small>
+      </div>
+      <div className="flex"> {formatDate(chat.startDate)} </div>
     </div>
   );
 }

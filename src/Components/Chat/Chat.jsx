@@ -11,7 +11,7 @@ function Chat({ socket, setChatVisibility }) {
   useEffect(() => {
     // Escutando novas chamadas
     socket.on("NEW_CALL", (call) => {
-      console.log("Nova chamada recebida:", call);
+    
       setChats((prevChats) => [...prevChats, call]);
 
       // Confirmação
