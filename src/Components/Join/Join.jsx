@@ -9,7 +9,14 @@ function Join({ setSocket, setChatVisibility }) {
       reconnectionDelayMax: 10000,
       path: "/callcontrol",
     });
-
+    if (maxCalls > 8) {
+      alert("O número de chamadas deve ser menor que 8.");
+      return
+    }
+    if (maxCalls < 1) {
+      alert("O número de chamadas deve ser maior que 0.");
+      return
+    }
     socket.emit("USER_CONNECT", { username, maxCalls });
 
     socket.on("USER_CONNECTED", () => {

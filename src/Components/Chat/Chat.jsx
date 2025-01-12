@@ -11,7 +11,6 @@ function Chat({ socket, setChatVisibility }) {
   useEffect(() => {
     // Escutando novas chamadas
     socket.on("NEW_CALL", (call) => {
-    
       setChats((prevChats) => [...prevChats, call]);
 
       // Confirmação
@@ -40,13 +39,17 @@ function Chat({ socket, setChatVisibility }) {
 
   return (
     <div>
-      <div className="flex align-center justify-center p-4">
-        <p className="m-0 p-0 cursor-default">{userName}</p>
+      <div className="flex align-center justify-center items-center p-4">
+        <p className="mx-2 p-0 text-center font-bold text-2xl cursor-default">
+          {userName}
+        </p>
         <Button onClick={() => setChatVisibility(false)}>Desconectar</Button>
       </div>
-      <div className="flex ">
-        <div className="p-4">
-          <h2 className="cursor-default">Chats em andamento</h2>
+      <div className="flex items-start ">
+        <div className="p-4 shadow-xl bg-white rounded-md">
+          <h2 className="cursor-default font-bold text-xl">
+            Chats em andamento
+          </h2>
           <div className="flex flex-col ">
             {chats.map((chat) => (
               <Chamados
@@ -60,12 +63,6 @@ function Chat({ socket, setChatVisibility }) {
         {currentChat && (
           // details
           <Details currentChat={currentChat} handleEndCall={handleEndCall} />
-          /*<div>
-          <h3>Chat Atual</h3>
-          <p>Serviço: {currentChat.service}</p>
-          <p>Chamador: {currentChat.caller}</p>
-          <Button onClick={() => handleEndCall(currentChat.callId)}>Encerrar</Button>
-        </div>*/
         )}
       </div>
     </div>

@@ -5,7 +5,7 @@ function Details({ currentChat, handleEndCall }) {
     const date = new Date(dateString);
 
     const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); 
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
 
     const hours = String(date.getHours()).padStart(2, "0");
@@ -15,27 +15,36 @@ function Details({ currentChat, handleEndCall }) {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
   return (
-    <div className="flex flex-col p-4">
-      <h3 className="cursor-default">Chamada Selecionada</h3>
-      <div className="flex flex-col  bg-gray-300 p-4 rounded">
+    <div className="flex flex-col  p-4 bg-gray-200 shadow-xl mx-4 rounded-md">
+      <h2 className="cursor-default font-bold text-xl ">Chamada Selecionada</h2>
+      <div className="flex flex-col   p-4 rounded">
         <p className="my-1 text-left cursor-default">
-          CallId: {currentChat.callId}
+          <b className="mr-1">CallId:</b>
+          {currentChat.callId}
         </p>
         <p className="my-1 text-left cursor-default">
-          Mídia: {currentChat.media}
+          <b className="mr-1">Mídia:</b>
+
+          {currentChat.media}
         </p>
         <p className="my-1 text-left cursor-default">
-          Data Inicial: {formatDate(currentChat.startDate)}
+          <b className="mr-1">Data Inicial:</b>
+
+          {formatDate(currentChat.startDate)}
         </p>
         <p className="my-1 text-left cursor-default">
-          Serviço: {currentChat.service}
+          <b className="mr-1">Serviço:</b>
+
+          {currentChat.service}
         </p>
         <p className="my-1 text-left cursor-default">
-          Chamador: {currentChat.caller}
+          <b className="mr-1">Chamador:</b>
+
+          {currentChat.caller}
         </p>
 
-        <Button onClick={() => handleEndCall(currentChat.callId)}>
-          Encerrar
+        <Button className="w-[157px]" onClick={() => handleEndCall(currentChat.callId)}>
+          Finalizar
         </Button>
       </div>
     </div>
