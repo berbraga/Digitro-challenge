@@ -1,9 +1,16 @@
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setSocket } from "../../store/slices/chatSlice";
 import { io } from "socket.io-client";
-import InputField from "../Form/InputField"
-import Button from "../Form/Button"
+import InputField from "../../components/form/InputField";
+import Button from "../../components/form/Button";
+
+function Join({ setSocket }) {
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 
-function Join({ setSocket, setChatVisibility }) {
   const handleConnect = (username, maxCalls) => {
     const socket = io("http://dev.digitro.com", {
       reconnectionDelayMax: 10000,
@@ -11,19 +18,21 @@ function Join({ setSocket, setChatVisibility }) {
     });
     if (maxCalls > 8) {
       alert("O número de chamadas deve ser menor que 8.");
-      return
+      return;
     }
     if (maxCalls < 1) {
       alert("O número de chamadas deve ser maior que 0.");
-      return
+      return;
     }
     socket.emit("USER_CONNECT", { username, maxCalls });
 
     socket.on("USER_CONNECTED", () => {
       localStorage.setItem("username", username);
-      console.log(`Usuário ${username} conectado com sucesso, com limite de ${maxCalls} chamadas.`);
+      console.log(
+        `Usuário ${username} conectado com sucesso, com limite de ${maxCalls} chamadas.`
+      );
       setSocket(socket);
-      setChatVisibility(true);
+      navigate("/chat");
     });
 
     socket.on("USER_CONNECTION_ERROR", (error) => {
@@ -59,10 +68,7 @@ function Join({ setSocket, setChatVisibility }) {
           min="1"
           className="m-1"
         />
-         <Button
-          type="submit"
-          className="w-full"
-        >
+        <Button type="submit" className="w-full">
           Conectar
         </Button>
       </form>

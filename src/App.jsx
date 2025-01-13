@@ -1,21 +1,39 @@
-import './App.css'
-import Join from './Components/Join/Join';
-import Chat from './Components/Chat/Chat';
-import { useState } from 'react';
+import "./App.css";
+
+import { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Join from "./pages/Join/Join"
+import Chat from "./pages/Chat/Chat"
 
 function App() {
-  const [chatVisibility, setChatVisibility] = useState(false);
-  const [ socket, setSocket ] = useState(null);
-  return (
-    <div>
 
-      {
-        chatVisibility ? <Chat socket={socket} setChatVisibility={setChatVisibility}/> : <Join setSocket={setSocket} setChatVisibility={setChatVisibility}/>
-      }
-      {/* <Join />
-      <Chat /> */}
-    </div>
+  const [socket, setSocket] = useState(null);
+
+  return (
+    <Router>
+      <Routes>
+        {/* Redireciona para Join se o chat ainda não estiver visível */}
+        <Route path="/" element={<Navigate to="/join" />} />
+        <Route
+          path="/join"
+          element={
+            <Join setSocket={setSocket} />
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <Chat socket={socket}  />
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
-export default App
+export default App;

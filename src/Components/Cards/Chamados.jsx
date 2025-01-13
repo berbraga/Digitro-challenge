@@ -1,6 +1,6 @@
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
-function Chamados({ chat, onSelect }) {
+function Chamados({ chat, currentChat, onSelect }) {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
@@ -10,9 +10,14 @@ function Chamados({ chat, onSelect }) {
 
     return ` ${hours}:${minutes}:${seconds}`;
   };
+
+  const isSelected = currentChat?.callId === chat.callId;
+
   return (
     <div
-      className="flex justify-between w-[230px] border-2 m-2 p-2 cursor-pointer rounded-md hover:border-red-300"
+      className={`flex justify-between w-[230px] border-2 m-2 p-2 cursor-pointer rounded-md ${
+        isSelected ? "border-blue-500" : "hover:border-red-300"
+      }`}
       onClick={() => onSelect(chat)}
     >
       <div className="flex items-center rounded-md bg-orange-100 p-2 cursor-pointer">
@@ -33,5 +38,4 @@ function Chamados({ chat, onSelect }) {
     </div>
   );
 }
-
 export default Chamados;
