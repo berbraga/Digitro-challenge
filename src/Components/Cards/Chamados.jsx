@@ -1,13 +1,21 @@
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
+
 function Chamados({ chat, currentChat, onSelect }) {
+  const [isNew, setIsNew] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setIsNew(false), 500); // Remove a classe após a animação
+    return () => clearTimeout(timeout);
+  }, []);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
     const seconds = String(date.getSeconds()).padStart(2, "0");
-
     return ` ${hours}:${minutes}:${seconds}`;
   };
 
@@ -17,7 +25,7 @@ function Chamados({ chat, currentChat, onSelect }) {
     <div
       className={`flex justify-between w-[270px] border-2 m-2 p-2 cursor-pointer rounded-md ${
         isSelected ? "border-blue-500" : "hover:border-red-300"
-      }`}
+      } ${isNew ? "fade-in" : ""}`} 
       onClick={() => onSelect(chat)}
     >
       <div className="flex items-center rounded-md bg-orange-100 p-2 cursor-pointer">
@@ -38,4 +46,5 @@ function Chamados({ chat, currentChat, onSelect }) {
     </div>
   );
 }
+
 export default Chamados;

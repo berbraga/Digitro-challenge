@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 
 function InputField({ label, name, type = "text", placeholder, required = false, className = "", min, onChange }) {

@@ -56,11 +56,15 @@ function Chat() {
         <Button onClick={() => navigate("/join")}>Desconectar</Button>
       </div>
       <div className="flex items-start ">
-        <div className="p-4 shadow-xl bg-white rounded-md">
+        <div
+          className={`p-4 shadow-xl bg-white rounded-md container-transition ${
+            chats.length > 0 ? "container-expanded" : "container-collapsed"
+          }`}
+        >
           <h2 className="cursor-default font-bold text-xl">
             Chats em andamento
           </h2>
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             {chats.map((chat) => (
               <Chamados
                 key={chat.callId}

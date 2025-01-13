@@ -1,6 +1,17 @@
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import Button from "../Form/Button";
 
 function Details({ currentChat, handleEndCall }) {
+  const [animationClass, setAnimationClass] = useState("");
+
+  useEffect(() => {
+    // Adiciona a classe de animação sempre que currentChat mudar
+    setAnimationClass("animate-fade-in");
+    const timeout = setTimeout(() => setAnimationClass(""), 500); // Remove a classe após a animação
+    return () => clearTimeout(timeout); // Limpa o timeout anterior para evitar conflitos
+  }, [currentChat]);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
@@ -14,36 +25,38 @@ function Details({ currentChat, handleEndCall }) {
 
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
+
   return (
-    <div className="flex flex-col  p-4 bg-gray-200 shadow-xl mx-4 rounded-md">
-      <h2 className="cursor-default font-bold text-xl ">Chamada Selecionada</h2>
-      <div className="flex flex-col   p-4 rounded">
+    <div
+      className={`flex flex-col p-4 bg-gray-200 shadow-xl mx-4 rounded-md transition-all duration-500 ease-in-out ${animationClass}`}
+    >
+      <h2 className="cursor-default font-bold text-xl">Chamada Selecionada</h2>
+      <div className="flex flex-col p-4 rounded">
         <p className="my-1 text-left cursor-default">
           <b className="mr-1">CallId:</b>
           {currentChat.callId}
         </p>
         <p className="my-1 text-left cursor-default">
           <b className="mr-1">Mídia:</b>
-
           {currentChat.media}
         </p>
         <p className="my-1 text-left cursor-default">
           <b className="mr-1">Data Inicial:</b>
-
           {formatDate(currentChat.startDate)}
         </p>
         <p className="my-1 text-left cursor-default">
           <b className="mr-1">Serviço:</b>
-
           {currentChat.service}
         </p>
         <p className="my-1 text-left cursor-default">
           <b className="mr-1">Chamador:</b>
-
           {currentChat.caller}
         </p>
-
-        <Button className="w-[157px]  " alert onClick={() => handleEndCall(currentChat.callId)}>
+        <Button
+          className="w-[157px]"
+          alert
+          onClick={() => handleEndCall(currentChat.callId)}
+        >
           Finalizar
         </Button>
       </div>
