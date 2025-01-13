@@ -6,6 +6,7 @@ function Button({
   onClick,
   className = "",
   disabled = false,
+  alert = false,
 }) {
   return (
     <button
@@ -16,6 +17,11 @@ function Button({
                   ${
                     disabled
                       ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300"
+                  } 
+                  ${
+                    alert
+                      ? "bg-red-500 hover:bg-red-600 focus:ring focus:ring-red-300"
                       : "bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300"
                   } 
                   ${className}`}
@@ -32,6 +38,7 @@ Button.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  alert: PropTypes.bool,
 };
 
 export default Button;

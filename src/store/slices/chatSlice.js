@@ -21,6 +21,7 @@ const chatSlice = createSlice({
         (chat) => chat.callId !== action.payload
       );
     },
+    
     setCurrentChat(state, action) {
       state.currentChat = action.payload;
     },

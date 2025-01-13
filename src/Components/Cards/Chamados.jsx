@@ -15,7 +15,7 @@ function Chamados({ chat, currentChat, onSelect }) {
 
   return (
     <div
-      className={`flex justify-between w-[230px] border-2 m-2 p-2 cursor-pointer rounded-md ${
+      className={`flex justify-between w-[270px] border-2 m-2 p-2 cursor-pointer rounded-md ${
         isSelected ? "border-blue-500" : "hover:border-red-300"
       }`}
       onClick={() => onSelect(chat)}
@@ -23,7 +23,7 @@ function Chamados({ chat, currentChat, onSelect }) {
       <div className="flex items-center rounded-md bg-orange-100 p-2 cursor-pointer">
         <IoChatbubbleEllipsesSharp color="orange" size="25px" />
       </div>
-      <div className="flex flex-col cursor-pointer w-[103px]">
+      <div className="flex flex-col cursor-pointer w-[153px]">
         <p className="mx-1 text-left font-bold text-md cursor-pointer">
           {chat.caller}
         </p>

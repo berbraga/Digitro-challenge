@@ -43,7 +43,7 @@ function Details({ currentChat, handleEndCall }) {
           {currentChat.caller}
         </p>
 
-        <Button className="w-[157px]" onClick={() => handleEndCall(currentChat.callId)}>
+        <Button className="w-[157px]  " alert onClick={() => handleEndCall(currentChat.callId)}>
           Finalizar
         </Button>
       </div>

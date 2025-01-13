@@ -5,17 +5,11 @@ import { io } from "socket.io-client";
 import InputField from "../../components/form/InputField";
 import Button from "../../components/form/Button";
 
-function Join({ setSocket }) {
-  
+function Join() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   const handleConnect = (username, maxCalls) => {
-    const socket = io("http://dev.digitro.com", {
-      reconnectionDelayMax: 10000,
-      path: "/callcontrol",
-    });
     if (maxCalls > 8) {
       alert("O número de chamadas deve ser menor que 8.");
       return;
@@ -24,6 +18,12 @@ function Join({ setSocket }) {
       alert("O número de chamadas deve ser maior que 0.");
       return;
     }
+
+    const socket = io("http://dev.digitro.com", {
+      reconnectionDelayMax: 10000,
+      path: "/callcontrol",
+    });
+
     socket.emit("USER_CONNECT", { username, maxCalls });
 
     socket.on("USER_CONNECTED", () => {
@@ -31,7 +31,10 @@ function Join({ setSocket }) {
       console.log(
         `Usuário ${username} conectado com sucesso, com limite de ${maxCalls} chamadas.`
       );
-      setSocket(socket);
+
+      // Armazenar o socket no estado global
+      dispatch(setSocket(socket));
+
       navigate("/chat");
     });
 
@@ -43,7 +46,6 @@ function Join({ setSocket }) {
 
   return (
     <div className="p-4 max-w-md mx-auto bg-white rounded-md shadow-md">
-      {/* <h2 className="text-2xl font-bold mb-4">Conectar</h2> */}
       <form
         onSubmit={(e) => {
           e.preventDefault();

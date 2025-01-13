@@ -1,40 +1,36 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
-  setSocket,
   addChat,
   removeChat,
   setCurrentChat,
   clearCurrentChat,
 } from "../../store/slices/chatSlice";
+import { useNavigate } from "react-router-dom";
 import Chamados from "../../components/cards/Chamados";
 import Details from "../../components/cards/Details";
 import Button from "../../components/form/Button";
 
-function Chat({ socket }) {
+function Chat() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    chats,
-    currentChat,
-    socket: reduxSocket,
-  } = useSelector((state) => state.chat);
+  const { socket, chats, currentChat } = useSelector((state) => state.chat);
+  const userName = localStorage.getItem("username");
 
   useEffect(() => {
-    if (!reduxSocket) {
+    if (!socket) {
       console.error("Socket não está configurado!");
-      alert("Entre antes de acessar o chat");
+      alert("Entre antes de acessar o chat.");
       navigate("/join");
       return;
     }
 
-    reduxSocket.on("NEW_CALL", (call) => {
+    socket.on("NEW_CALL", (call) => {
       dispatch(addChat(call));
-      reduxSocket.emit("NEW_CALL_ANSWERED", { callId: call.callId });
+      socket.emit("NEW_CALL_ANSWERED", { callId: call.callId });
     });
 
-    reduxSocket.on("CALL_ENDED", (data) => {
+    socket.on("CALL_ENDED", (data) => {
       dispatch(removeChat(data.callId));
       if (currentChat?.callId === data.callId) {
         dispatch(clearCurrentChat());
@@ -42,34 +38,33 @@ function Chat({ socket }) {
     });
 
     return () => {
-      reduxSocket.off("NEW_CALL");
-      reduxSocket.off("CALL_ENDED");
+      socket.off("NEW_CALL");
+      socket.off("CALL_ENDED");
     };
-  }, [reduxSocket, currentChat, dispatch, navigate]);
+  }, [socket, dispatch, currentChat, navigate]);
 
   const handleEndCall = (callId) => {
-    reduxSocket.emit("END_CALL", { callId });
+    socket.emit("END_CALL", { callId });
   };
 
   return (
     <div>
       <div className="flex align-center justify-center items-center p-4">
         <p className="mx-2 p-0 text-center font-bold text-2xl cursor-default">
-          {localStorage.getItem("username")}
+          {userName}
         </p>
         <Button onClick={() => navigate("/join")}>Desconectar</Button>
       </div>
-      <div className="flex items-start">
+      <div className="flex items-start ">
         <div className="p-4 shadow-xl bg-white rounded-md">
           <h2 className="cursor-default font-bold text-xl">
             Chats em andamento
           </h2>
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             {chats.map((chat) => (
               <Chamados
                 key={chat.callId}
                 chat={chat}
-                currentChat={currentChat}
                 onSelect={(chat) => dispatch(setCurrentChat(chat))}
               />
             ))}
