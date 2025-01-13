@@ -31,7 +31,7 @@ function Button({
   );
 }
 
-// Definindo os tipos das props (opcional, mas recomendado)
+// tipos das props 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.oneOf(["button", "submit", "reset"]),

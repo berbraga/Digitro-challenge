@@ -8,8 +8,8 @@ function Details({ currentChat, handleEndCall }) {
   useEffect(() => {
     // Adiciona a classe de animação sempre que currentChat mudar
     setAnimationClass("animate-fade-in");
-    const timeout = setTimeout(() => setAnimationClass(""), 500); // Remove a classe após a animação
-    return () => clearTimeout(timeout); // Limpa o timeout anterior para evitar conflitos
+    const timeout = setTimeout(() => setAnimationClass(""), 500); 
+    return () => clearTimeout(timeout); 
   }, [currentChat]);
 
   const formatDate = (dateString) => {

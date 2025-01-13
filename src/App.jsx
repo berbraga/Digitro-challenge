@@ -17,7 +17,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Redireciona para Join se o chat ainda não estiver visível */}
         <Route path="/" element={<Navigate to="/join" />} />
         <Route
           path="/join"
