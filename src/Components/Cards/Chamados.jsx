@@ -7,7 +7,7 @@ function Chamados({ chat, currentChat, onSelect }) {
   const [isNew, setIsNew] = useState(true);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setIsNew(false), 500); // Remove a classe após a animação
+    const timeout = setTimeout(() => setIsNew(false), 500);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -20,6 +20,7 @@ function Chamados({ chat, currentChat, onSelect }) {
     return ` ${hours}:${minutes}:${seconds}`;
   };
 
+  
   const isSelected = currentChat?.callId === chat.callId;
 
   return (

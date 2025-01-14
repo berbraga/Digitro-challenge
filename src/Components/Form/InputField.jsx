@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 
-
 function InputField({ label, name, type = "text", placeholder, required = false, className = "", min, onChange }) {
   return (
     <div className={`flex flex-col mb-2 ${className}`}>

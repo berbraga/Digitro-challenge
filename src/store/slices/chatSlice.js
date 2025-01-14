@@ -29,7 +29,7 @@ const chatSlice = createSlice({
       state.currentChat = null;
     },
     resetState() {
-      return initialState; // Resetar o estado para o valor inicial
+      return initialState;
     },
   },
 });

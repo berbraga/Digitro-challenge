@@ -32,7 +32,7 @@ function Join() {
         `Usuário ${username} conectado com sucesso, com limite de ${maxCalls} chamadas.`
       );
 
-      // Armazenar o socket no estado global
+      
       dispatch(setSocket(socket));
 
       navigate("/chat");
