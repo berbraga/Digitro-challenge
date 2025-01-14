@@ -21,12 +21,15 @@ const chatSlice = createSlice({
         (chat) => chat.callId !== action.payload
       );
     },
-    
+
     setCurrentChat(state, action) {
       state.currentChat = action.payload;
     },
     clearCurrentChat(state) {
       state.currentChat = null;
+    },
+    resetState() {
+      return initialState; // Resetar o estado para o valor inicial
     },
   },
 });
@@ -37,6 +40,7 @@ export const {
   removeChat,
   setCurrentChat,
   clearCurrentChat,
+  resetState,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

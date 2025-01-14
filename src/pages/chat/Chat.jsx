@@ -5,6 +5,7 @@ import {
   removeChat,
   setCurrentChat,
   clearCurrentChat,
+  resetState,
 } from "../../store/slices/chatSlice";
 import { useNavigate } from "react-router-dom";
 import Chamados from "../../components/cards/Chamados";
@@ -47,13 +48,19 @@ function Chat() {
     socket.emit("END_CALL", { callId });
   };
 
+  const logout = () => {
+     dispatch(resetState());
+      navigate("/join");
+  
+  };
+
   return (
     <div>
       <div className="flex align-center justify-center items-center p-4">
         <p className="mx-2 p-0 text-center font-bold text-2xl cursor-default">
           {userName}
         </p>
-        <Button onClick={() => navigate("/join")}>Desconectar</Button>
+        <Button onClick={() => logout()}>Desconectar</Button>
       </div>
       <div className="flex items-start ">
         <div
